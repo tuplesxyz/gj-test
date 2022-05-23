@@ -1,8 +1,9 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import Ticker from '../components/Ticker';
 import styles from '../styles/Home.module.css'
 
-const Home: NextPage<{
+interface HomeProps {
   atv: string;
   tradingPairs: {
     trading: string;
@@ -25,34 +26,13 @@ const Home: NextPage<{
     ask: string;
     open: string;
   };
-}> = ({
+}
+
+const Home: NextPage<HomeProps> = ({
   atv,
   tradingPairs,
   intitialTradingPairs,
-}: {
-  atv: string;
-  tradingPairs: {
-    trading: string;
-    base_decimals: number;
-    url_symbol: string;
-    name: string;
-    instant_and_market_orders: string;
-    minimum_order: string;
-    counter_decimals: number;
-    description: string;
-  }[];
-  intitialTradingPairs: {
-    high: string;
-    last: string;
-    timestamp: string;
-    bid: string;
-    vwap: string;
-    volume: string;
-    low: string;
-    ask: string;
-    open: string;
-  };
-}) => {
+}: HomeProps) => {
   return (
     <div className={styles.container}>
       <Head>
@@ -64,12 +44,7 @@ const Home: NextPage<{
       <main className={styles.main}>
         <div className="flex flex-wrap overflow-hidden lg:-mx-2 xl:-mx-1 h-full">
           <div className="w-full overflow-hidden lg:my-2 lg:w-full xl:my-1 xl:px-1 xl:w-1/2 ">
-            <div className="flex flex-col  h-full text-center w-full space-y-10">
-              <h1 className="text-zinc-800 capitalize font-bold">
-                average ticker values
-              </h1>
-              <p>{atv}</p>
-            </div>
+            <Ticker atv={atv} />
           </div>
         </div>
       </main>
