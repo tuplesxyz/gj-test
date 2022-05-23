@@ -2,7 +2,57 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 
-const Home: NextPage = () => {
+const Home: NextPage<{
+  atv: string;
+  tradingPairs: {
+    trading: string;
+    base_decimals: number;
+    url_symbol: string;
+    name: string;
+    instant_and_market_orders: string;
+    minimum_order: string;
+    counter_decimals: number;
+    description: string;
+  }[];
+  intitialTradingPairs: {
+    high: string;
+    last: string;
+    timestamp: string;
+    bid: string;
+    vwap: string;
+    volume: string;
+    low: string;
+    ask: string;
+    open: string;
+  };
+}> = ({
+  atv,
+  tradingPairs,
+  intitialTradingPairs,
+}: {
+  atv: string;
+  tradingPairs: {
+    trading: string;
+    base_decimals: number;
+    url_symbol: string;
+    name: string;
+    instant_and_market_orders: string;
+    minimum_order: string;
+    counter_decimals: number;
+    description: string;
+  }[];
+  intitialTradingPairs: {
+    high: string;
+    last: string;
+    timestamp: string;
+    bid: string;
+    vwap: string;
+    volume: string;
+    low: string;
+    ask: string;
+    open: string;
+  };
+}) => {
   return (
     <div className={styles.container}>
       <Head>
@@ -12,10 +62,66 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1>GJ-test</h1>
+        <div className="flex flex-wrap overflow-hidden lg:-mx-2 xl:-mx-1 h-full">
+          <div className="w-full overflow-hidden lg:my-2 lg:w-full xl:my-1 xl:px-1 xl:w-1/2 ">
+            <div className="flex flex-col  h-full text-center w-full space-y-10">
+              <h1 className="text-zinc-800 capitalize font-bold">
+                average ticker values
+              </h1>
+              <p>{atv}</p>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
-  )
+  );
+};
+
+export async function getStaticProps() {
+  const tradingPairsData = await fetch(
+    "https://www.bitstamp.net/api/v2/trading-pairs-info/"
+  );
+
+  const bitstampData = await fetch(
+    "https://www.bitstamp.net/api/v2/ticker/btcusd"
+  );
+
+  const coinbaseData = await fetch(
+    "https://api.coinbase.com/v2/exchange-rates?currency=BTC"
+  );
+
+  const bitfinexData = await fetch(
+    "https://api-pub.bitfinex.com/v2/tickers?symbols=tBTCUSD"
+  );
+
+  const tradingPairs = await tradingPairsData.json();
+  const bitstampDataJson = await bitstampData.json();
+  const coinbaseDataJson = await coinbaseData.json();
+  const bitfinexDataJson = await bitfinexData.json();
+
+  const initialTradingPairResponse = await fetch(
+    `https://www.bitstamp.net/api/v2/ticker/${tradingPairs[0].url_symbol}/`
+  );
+
+  const initialTradingPairData = await initialTradingPairResponse.json();
+
+  const atv = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(
+    (Number(bitstampDataJson.last) +
+      Number(coinbaseDataJson.data.rates.USD) +
+      bitfinexDataJson[0][1]) /
+      3
+  );
+
+  return {
+    props: {
+      atv,
+      tradingPairs,
+      initialTradingPairData,
+    },
+  };
 }
 
 export default Home
