@@ -39,7 +39,7 @@ I chose tailwind as it makes it easy to create responsive layouts.
 
 ### Typescript
 
-I used typescript with next js to get the benefits of static typing and a better IDE experience specifically with vs code as using typescript improves intellisense features such as code completion and parameter information. I also know the cons of using typescript as it has a learning curve and when used incorrectly can be a nightmare to deal with for example using any instead you should use unknown which is a type safe alternative.
+I used typescript with next js to get the benefits of static typing and a better IDE experience specifically with vs code as using typescript improves intellisense features such as code completion and parameter information. I also know the cons of using typescript as it has a learning curve and when used incorrectly can be a nightmare to deal with for example using *any* instead you should use *unknown* which is a type safe alternative.
 
 ### using getStaticProps 
 
